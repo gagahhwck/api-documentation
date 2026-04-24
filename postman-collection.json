@@ -38,17 +38,34 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             }
                         ],
                         "body": {
-                            "mode": "raw",
-                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "John Doe",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "john@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "password123",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "password123",
+                                    "type": "text"
+                                }
+                            ]
                         },
                         "description": "Create a new user account and return the user data.",
                         "auth": {
@@ -82,17 +99,24 @@
                         "method": "POST",
                         "header": [
                             {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             }
                         ],
                         "body": {
-                            "mode": "raw",
-                            "raw": "{\"email\":\"john@example.com\",\"password\":\"password123\"}"
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "email",
+                                    "value": "john@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "password123",
+                                    "type": "text"
+                                }
+                            ]
                         },
                         "description": "Authenticate a user and return an access token.",
                         "auth": {
@@ -145,10 +169,6 @@
                         },
                         "method": "GET",
                         "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
                             {
                                 "key": "Accept",
                                 "value": "application\/json"
