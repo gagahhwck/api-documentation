@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -40,9 +41,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255|unique:users',
+            'password'  => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
@@ -51,6 +52,65 @@ class AuthController extends Controller
             'password' => $data['password'],
         ]);
 
-        return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'User registered successfully',
+            'user' => $user,
+            'token' => $token
+            ], 201);
+    }
+
+    /**
+     * Login a user
+     *
+     * Authenticate a user and return an access token.
+     *
+     * @unauthenticated
+     *
+     * @bodyParam email string required The email address of the user. Example: john@example.com
+     * @bodyParam password string required The password for the account. Example: password123
+     *
+     * @response 200 {
+     *   "message": "User logged in successfully",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "john@example.com"
+     *   },
+     *   "token": "1|laravel_sanctum_token..."
+     * }
+     *
+     * @response 401 {
+     *   "message": "Invalid credentials"
+     * }
+     *
+     * @response 422 {
+     *   "message": "The email field is required.",
+     *   "errors": {
+     *     "email": ["The email field is required."],
+     *     "password": ["The password field is required."]
+     *   }
+     * }
+     */
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required|string|email',
+            'password' => 'required|string',
+        ]);
+
+        if (!Auth::attempt($data)) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'User logged in successfully',
+            'user' => $user,
+            'token' => $token,
+        ], 200);
     }
 }
