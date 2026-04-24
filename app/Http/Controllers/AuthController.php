@@ -52,6 +52,7 @@ class AuthController extends Controller
             'password' => $data['password'],
         ]);
 
+        /** @var string $token */
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -105,6 +106,8 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
+
+        /** @var string $token */
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -113,4 +116,35 @@ class AuthController extends Controller
             'token' => $token,
         ], 200);
     }
+
+
+    /**
+     * Get user profile
+     *
+     * Retrieve the authenticated user's profile information.
+     * Requires Bearer token from login/register.
+     *
+     * @response 200 {
+     *   "message": "User profile retrieved successfully",
+     *   "user": {
+     *     "id": 1,
+     *     "name": "John Doe",
+     *     "email": "john@example.com",
+     *     "created_at": "2024-01-15T10:00:00.000000Z",
+     *     "updated_at": "2024-01-15T10:00:00.000000Z"
+     *   }
+     * }
+     *
+     * @response 401 {
+     *   "message": "Unauthenticated."
+     * }
+     */
+    public function profile(Request $request)
+    {
+        return response()->json([
+            'message' => 'User profile retrieved successfully',
+            'user' => $request->user(),
+        ]);
+    }
 }
+
