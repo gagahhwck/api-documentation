@@ -1,58 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API Documentation
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> by **gagahhwck** — Backend API built with Laravel & Scribe
 
-## About Laravel
+This project is a Laravel-based REST API with auto-generated documentation powered by [Scribe](https://scribe.knuckles.wtf/).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Tech Stack
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Layer | Technology |
+|-------|------------|
+| Backend Framework | Laravel |
+| API Documentation | Scribe |
+| Authentication | Laravel Sanctum (ready) |
+| Database | MySQL / SQLite |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+- ✅ User Registration (`POST /api/register`)
+- ✅ Auto-generated API Docs (HTML & Postman Collection)
+- ✅ OpenAPI Spec export
+- ✅ Ready for Postman Documentation integration
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Quick Start
 
 ```bash
-composer require laravel/boost --dev
+# Clone repo
+git clone https://github.com/gagahhwck/api-documentation.git
+cd api-documentation
 
-php artisan boost:install
+# Install dependencies
+composer install
+
+# Copy environment file
+cp .env.example .env
+
+# Generate app key
+php artisan key:generate
+
+# Run migrations
+php artisan migrate
+
+# Start server
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## API Documentation
+
+### HTML Docs
+After running the server, visit:
+```
+http://localhost/docs
+```
+
+### Postman Collection
+Import `postman-collection.json` into Postman to test endpoints directly.
+
+### Update Documentation
+Whenever you add or change API endpoints, regenerate docs:
+
+```bash
+php artisan scribe:generate
+```
+
+This updates:
+- `resources/views/scribe/` — HTML docs
+- `postman-collection.json` — Postman Collection
+- `storage/app/private/scribe/openapi.yaml` — OpenAPI spec
+
+## API Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/register` | Register new user | No |
+
+### Register User
+
+**Request:**
+```bash
+curl -X POST http://localhost:8000/api/register \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "password_confirmation": "password123"
+  }'
+```
+
+**Response (201 Created):**
+```json
+{
+  "message": "User registered successfully",
+  "user": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "created_at": "2024-01-15T10:00:00.000000Z",
+    "updated_at": "2024-01-15T10:00:00.000000Z"
+  }
+}
+```
+
+## Project Structure
+
+```
+├── app/
+│   └── Http/
+│       └── Controllers/
+│           └── AuthController.php      # API Controllers with Scribe annotations
+├── routes/
+│   └── api.php                         # API Routes
+├── storage/app/private/scribe/
+│   └── collection.json                 # Postman Collection (auto-generated)
+│   └── openapi.yaml                    # OpenAPI Spec (auto-generated)
+├── resources/views/scribe/
+│   └── index.blade.php                 # HTML Docs (auto-generated)
+└── postman-collection.json             # Postman Collection (copied to root)
+```
+
+## Optional: Postman Documentation Setup
+
+1. Open Postman App
+2. Click **Import** → Select `postman-collection.json`
+3. Collection appears in sidebar
+4. Click **⋮** → **View Documentation** → **Publish**
+5. Share the public URL with your team
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Feel free to fork and submit PRs.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
