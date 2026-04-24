@@ -18,16 +18,16 @@
     "info": {
         "name": "Laravel API Documentation",
         "_postman_id": "c6576415-26f7-4f2c-b95c-0ef29610dc7f",
-        "description": "",
+        "description": "API Documentation dengan form-data support. Token auto-save setelah login.",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
         {
-            "name": "Authentication API",
-            "description": "",
+            "name": "Authentication",
+            "description": "Endpoint untuk autentikasi user (register, login, profile, logout)",
             "item": [
                 {
-                    "name": "Register a new user",
+                    "name": "Register",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -67,7 +67,7 @@
                                 }
                             ]
                         },
-                        "description": "Create a new user account and return the user data.",
+                        "description": "Buat akun user baru. Return user data + token.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -76,19 +76,19 @@
                         {
                             "header": [],
                             "code": 201,
-                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
+                            "name": "Success"
                         },
                         {
                             "header": [],
                             "code": 422,
                             "body": "{\n  \"message\": \"The email field is required.\",\n  \"errors\": {\n    \"email\": [\"The email field is required.\"]\n  }\n}",
-                            "name": ""
+                            "name": "Validation Error"
                         }
                     ]
                 },
                 {
-                    "name": "Login a user",
+                    "name": "Login",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -118,7 +118,7 @@
                                 }
                             ]
                         },
-                        "description": "Authenticate a user and return an access token.",
+                        "description": "Login user. Token otomatis tersimpan ke variable {{auth_token}}.",
                         "auth": {
                             "type": "noauth"
                         }
@@ -132,6 +132,7 @@
                                     "var jsonData = pm.response.json();",
                                     "if (jsonData.token) {",
                                     "    pm.collectionVariables.set('auth_token', jsonData.token);",
+                                    "    console.log('Token saved:', jsonData.token);",
                                     "}"
                                 ]
                             }
@@ -141,25 +142,19 @@
                         {
                             "header": [],
                             "code": 200,
-                            "body": "{\n  \"message\": \"User logged in successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|laravel_sanctum_token...\"\n}",
-                            "name": ""
+                            "body": "{\n  \"message\": \"User logged in successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
+                            "name": "Success"
                         },
                         {
                             "header": [],
                             "code": 401,
                             "body": "{\n  \"message\": \"Invalid credentials\"\n}",
-                            "name": ""
-                        },
-                        {
-                            "header": [],
-                            "code": 422,
-                            "body": "{\n  \"message\": \"The email field is required.\",\n  \"errors\": {\n    \"email\": [\"The email field is required.\"],\n    \"password\": [\"The password field is required.\"]\n  }\n}",
-                            "name": ""
+                            "name": "Unauthorized"
                         }
                     ]
                 },
                 {
-                    "name": "Get user profile",
+                    "name": "Profile",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -175,7 +170,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Retrieve the authenticated user's profile information.\nRequires Bearer token from login\/register.",
+                        "description": "Ambil data user yang sedang login. Wajib pakai Bearer token.",
                         "auth": {
                             "type": "bearer",
                             "bearer": [
@@ -192,18 +187,18 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"message\": \"User profile retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
-                            "name": ""
+                            "name": "Success"
                         },
                         {
                             "header": [],
                             "code": 401,
                             "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
-                            "name": ""
+                            "name": "Unauthorized"
                         }
                     ]
                 },
                 {
-                    "name": "Logout a user",
+                    "name": "Logout",
                     "request": {
                         "url": {
                             "host": "{{baseUrl}}",
@@ -219,7 +214,7 @@
                             }
                         ],
                         "body": null,
-                        "description": "Invalidate the current access token and log the user out.\nRequires Bearer token from login\/register.",
+                        "description": "Hapus token yang sedang aktif. User harus login ulang.",
                         "auth": {
                             "type": "bearer",
                             "bearer": [
@@ -236,13 +231,246 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"message\": \"User logged out successfully\"\n}",
-                            "name": ""
+                            "name": "Success"
                         },
                         {
                             "header": [],
                             "code": 401,
                             "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
-                            "name": ""
+                            "name": "Unauthorized"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "User Management",
+            "description": "CRUD user (wajib login). Index dan Store public, lainnya butuh auth.",
+            "item": [
+                {
+                    "name": "List Users",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Tampilkan semua data user.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"Users retrieved successfully\",\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n    }\n  ]\n}",
+                            "name": "Success"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "Jane Doe",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "jane@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "password123",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "password123",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "description": "Buat user baru via form-data.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"User created successfully\",\n  \"user\": {\n    \"id\": 2,\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"2|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}",
+                            "name": "Validation Error"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/1",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/1"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Tampilkan detail user berdasarkan ID.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"User retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"User not found\"\n}",
+                            "name": "Not Found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/1",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/1"
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "John Updated",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "john.updated@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "newpassword123",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password_confirmation",
+                                    "value": "newpassword123",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "description": "Update data user. Field optional (sometimes).",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"User updated successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"User not found\"\n}",
+                            "name": "Not Found"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete User",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/users\/1",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/users\/1"
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Hapus user beserta semua token-nya.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"User deleted successfully\"\n}",
+                            "name": "Success"
+                        },
+                        {
+                            "header": [],
+                            "code": 404,
+                            "body": "{\n  \"message\": \"User not found\"\n}",
+                            "name": "Not Found"
                         }
                     ]
                 }
@@ -253,4 +481,3 @@
         "type": "noauth"
     }
 }
-
