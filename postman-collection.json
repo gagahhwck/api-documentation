@@ -10,13 +10,13 @@
     ],
     "info": {
         "name": "Laravel API Documentation",
-        "_postman_id": "d359888c-3404-409f-a34a-4003ef3f3baf",
+        "_postman_id": "c6576415-26f7-4f2c-b95c-0ef29610dc7f",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
     },
     "item": [
         {
-            "name": "Authentication",
+            "name": "Endpoints",
             "description": "",
             "item": [
                 {
@@ -31,34 +31,17 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             }
                         ],
                         "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "name",
-                                    "value": "John Doe",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "email",
-                                    "value": "john@example.com",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "password",
-                                    "value": "password123",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "password_confirmation",
-                                    "value": "password123",
-                                    "type": "text"
-                                }
-                            ]
+                            "mode": "raw",
+                            "raw": "{\"name\":\"John Doe\",\"email\":\"john@example.com\",\"password\":\"password123\",\"password_confirmation\":\"password123\"}"
                         },
                         "description": "Create a new user account and return the user data.",
                         "auth": {
@@ -92,24 +75,17 @@
                         "method": "POST",
                         "header": [
                             {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
                                 "key": "Accept",
                                 "value": "application\/json"
                             }
                         ],
                         "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {
-                                    "key": "email",
-                                    "value": "john@example.com",
-                                    "type": "text"
-                                },
-                                {
-                                    "key": "password",
-                                    "value": "password123",
-                                    "type": "text"
-                                }
-                            ]
+                            "mode": "raw",
+                            "raw": "{\"email\":\"john@example.com\",\"password\":\"password123\"}"
                         },
                         "description": "Authenticate a user and return an access token.",
                         "auth": {
@@ -133,6 +109,47 @@
                             "header": [],
                             "code": 422,
                             "body": "{\n  \"message\": \"The email field is required.\",\n  \"errors\": {\n    \"email\": [\"The email field is required.\"],\n    \"password\": [\"The password field is required.\"]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Get user profile",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/profile",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/profile"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Retrieve the authenticated user's profile information.\nRequires Bearer token from login\/register.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"User profile retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
                             "name": ""
                         }
                     ]
