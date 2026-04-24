@@ -146,5 +146,36 @@ class AuthController extends Controller
             'user' => $request->user(),
         ]);
     }
+
+    /**
+     * Logout a user
+     *
+     * Invalidate the current access token, effectively logging the user out.
+     * Requires Bearer token from login/register.
+     *
+     * @response 200 {
+     *  "message": "User logged out successfully"
+     * }
+     * @response 401 {
+     *  "message": "Unauthenticated."
+     * }
+     * @response 500 {
+     * "message": "An error occurred while logging out."
+     * }
+     *
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+            return response()->json([
+                'message' => 'User logged out successfully'
+                ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while logging out.'
+                ], 500);
+        }
+    }
 }
 

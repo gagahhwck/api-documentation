@@ -1,45 +1,22 @@
 {
-    "variable": [
-        {
-            "id": "baseUrl",
-            "key": "baseUrl",
-            "type": "string",
-            "name": "string",
-            "value": "http:\/\/localhost"
-        },
-        {
-            "id": "auth_token",
-            "key": "auth_token",
-            "type": "string",
-            "name": "string",
-            "value": ""
-        }
-    ],
     "info": {
-        "name": "Laravel API Documentation",
-        "_postman_id": "c6576415-26f7-4f2c-b95c-0ef29610dc7f",
-        "description": "API Documentation dengan form-data support. Token auto-save setelah login.",
-        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+        "name": "Private API - Laravel Sanctum",
+        "description": "Dokumentasi lengkap API Private dengan Laravel Sanctum. Semua request body yang menerima input menggunakan form-data (termasuk upload file logo pada Shops). Token login otomatis tersimpan ke variable `{{auth_token}}`.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
         {
             "name": "Authentication",
-            "description": "Endpoint untuk autentikasi user (register, login, profile, logout)",
+            "description": "Endpoint autentikasi user: register, login, profile, dan logout.",
             "item": [
                 {
                     "name": "Register",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/register",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/register"
-                        },
                         "method": "POST",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
                             }
                         ],
                         "body": {
@@ -67,40 +44,39 @@
                                 }
                             ]
                         },
-                        "description": "Buat akun user baru. Return user data + token.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "register"
+                            ]
+                        },
+                        "description": "Register user baru. Return data user + token."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 201,
-                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User registered successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Validation Error",
                             "code": 422,
-                            "body": "{\n  \"message\": \"The email field is required.\",\n  \"errors\": {\n    \"email\": [\"The email field is required.\"]\n  }\n}",
-                            "name": "Validation Error"
+                            "body": "{\n  \"message\": \"The email field is required.\",\n  \"errors\": {\n    \"email\": [\"The email field is required.\"]\n  }\n}"
                         }
                     ]
                 },
                 {
                     "name": "Login",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/login",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/login"
-                        },
                         "method": "POST",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
                             }
                         ],
                         "body": {
@@ -118,16 +94,23 @@
                                 }
                             ]
                         },
-                        "description": "Login user. Token otomatis tersimpan ke variable {{auth_token}}.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "login"
+                            ]
+                        },
+                        "description": "Login user. Token otomatis disimpan ke variable `{{auth_token}}`."
                     },
                     "event": [
                         {
                             "listen": "test",
                             "script": {
-                                "type": "text\/javascript",
+                                "type": "text/javascript",
                                 "exec": [
                                     "var jsonData = pm.response.json();",
                                     "if (jsonData.token) {",
@@ -140,158 +123,157 @@
                     ],
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User logged in successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User logged in successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\"\n  },\n  \"token\": \"1|xxxxxxxxxxxxxxxxxxxxxx\"\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Unauthorized",
                             "code": 401,
-                            "body": "{\n  \"message\": \"Invalid credentials\"\n}",
-                            "name": "Unauthorized"
+                            "body": "{\n  \"message\": \"Invalid credentials\"\n}"
                         }
                     ]
                 },
                 {
                     "name": "Profile",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/profile",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/profile"
-                        },
                         "method": "GET",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
-                        "body": null,
-                        "description": "Ambil data user yang sedang login. Wajib pakai Bearer token.",
-                        "auth": {
-                            "type": "bearer",
-                            "bearer": [
-                                {
-                                    "key": "token",
-                                    "value": "{{auth_token}}",
-                                    "type": "string"
-                                }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "profile"
                             ]
-                        }
+                        },
+                        "description": "Ambil data user yang sedang login. Wajib Bearer token."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User profile retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User profile retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Unauthorized",
                             "code": 401,
-                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
-                            "name": "Unauthorized"
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
                         }
                     ]
                 },
                 {
                     "name": "Logout",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/logout",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/logout"
-                        },
                         "method": "POST",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
-                        "body": null,
-                        "description": "Hapus token yang sedang aktif. User harus login ulang.",
-                        "auth": {
-                            "type": "bearer",
-                            "bearer": [
-                                {
-                                    "key": "token",
-                                    "value": "{{auth_token}}",
-                                    "type": "string"
-                                }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/logout",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "logout"
                             ]
-                        }
+                        },
+                        "description": "Hapus token aktif. User harus login ulang."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User logged out successfully\"\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User logged out successfully\"\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Unauthorized",
                             "code": 401,
-                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
-                            "name": "Unauthorized"
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}"
                         }
                     ]
                 }
-            ]
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{auth_token}}",
+                        "type": "string"
+                    }
+                ]
+            }
         },
         {
             "name": "User Management",
-            "description": "CRUD user (wajib login). Index dan Store public, lainnya butuh auth.",
+            "description": "CRUD user (wajib login).",
             "item": [
                 {
                     "name": "List Users",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users"
-                        },
                         "method": "GET",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
-                        "body": null,
-                        "description": "Tampilkan semua data user.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        },
+                        "description": "Tampilkan semua data user."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"Users retrieved successfully\",\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n    }\n  ]\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"Users retrieved successfully\",\n  \"users\": [\n    {\n      \"id\": 1,\n      \"name\": \"John Doe\",\n      \"email\": \"john@example.com\",\n      \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n    }\n  ]\n}"
                         }
                     ]
                 },
                 {
                     "name": "Create User",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users"
-                        },
                         "method": "POST",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
                         "body": {
@@ -319,77 +301,83 @@
                                 }
                             ]
                         },
-                        "description": "Buat user baru via form-data.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users"
+                            ]
+                        },
+                        "description": "Buat user baru via form-data."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 201,
-                            "body": "{\n  \"message\": \"User created successfully\",\n  \"user\": {\n    \"id\": 2,\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"2|xxxxxxxxxxxxxxxxxxxxxx\"\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User created successfully\",\n  \"user\": {\n    \"id\": 2,\n    \"name\": \"Jane Doe\",\n    \"email\": \"jane@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  },\n  \"token\": \"2|xxxxxxxxxxxxxxxxxxxxxx\"\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Validation Error",
                             "code": 422,
-                            "body": "{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}",
-                            "name": "Validation Error"
+                            "body": "{\n  \"message\": \"The email has already been taken.\",\n  \"errors\": {\n    \"email\": [\"The email has already been taken.\"]\n  }\n}"
                         }
                     ]
                 },
                 {
                     "name": "Show User",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users\/1",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/1"
-                        },
                         "method": "GET",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
-                        "body": null,
-                        "description": "Tampilkan detail user berdasarkan ID.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        },
+                        "description": "Tampilkan detail user berdasarkan ID."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Not Found",
                             "code": 404,
-                            "body": "{\n  \"message\": \"User not found\"\n}",
-                            "name": "Not Found"
+                            "body": "{\n  \"message\": \"User not found\"\n}"
                         }
                     ]
                 },
                 {
                     "name": "Update User",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users\/1",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/1"
-                        },
                         "method": "PUT",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
                         "body": {
@@ -417,67 +405,693 @@
                                 }
                             ]
                         },
-                        "description": "Update data user. Field optional (sometimes).",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        },
+                        "description": "Update data user. Semua field optional kecuali yang dikirim."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User updated successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User updated successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Updated\",\n    \"email\": \"john.updated@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Not Found",
                             "code": 404,
-                            "body": "{\n  \"message\": \"User not found\"\n}",
-                            "name": "Not Found"
+                            "body": "{\n  \"message\": \"User not found\"\n}"
                         }
                     ]
                 },
                 {
                     "name": "Delete User",
                     "request": {
-                        "url": {
-                            "host": "{{baseUrl}}",
-                            "path": "api\/users\/1",
-                            "query": [],
-                            "raw": "{{baseUrl}}\/api\/users\/1"
-                        },
                         "method": "DELETE",
                         "header": [
                             {
                                 "key": "Accept",
-                                "value": "application\/json"
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
                             }
                         ],
-                        "body": null,
-                        "description": "Hapus user beserta semua token-nya.",
-                        "auth": {
-                            "type": "noauth"
-                        }
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "users",
+                                "1"
+                            ]
+                        },
+                        "description": "Hapus user beserta semua token-nya."
                     },
                     "response": [
                         {
-                            "header": [],
+                            "name": "Success",
                             "code": 200,
-                            "body": "{\n  \"message\": \"User deleted successfully\"\n}",
-                            "name": "Success"
+                            "body": "{\n  \"message\": \"User deleted successfully\"\n}"
                         },
                         {
-                            "header": [],
+                            "name": "Not Found",
                             "code": 404,
-                            "body": "{\n  \"message\": \"User not found\"\n}",
-                            "name": "Not Found"
+                            "body": "{\n  \"message\": \"User not found\"\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "description": "CRUD produk (wajib login).",
+            "item": [
+                {
+                    "name": "List Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" },
+                            { "key": "Authorization", "value": "Bearer {{auth_token}}" }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/products",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "products"]
+                        },
+                        "description": "Tampilkan semua produk."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Product",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                { "key": "name", "value": "Product A", "type": "text" },
+                                { "key": "description", "value": "Deskripsi produk", "type": "text" },
+                                { "key": "price", "value": "10000", "type": "text" },
+                                { "key": "category_product_id", "value": "1", "type": "text" },
+                                { "key": "shop_id", "value": "1", "type": "text" }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/products",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "products"]
+                        },
+                        "description": "Buat produk baru."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Show Product",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/products/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "products", "1"]
+                        },
+                        "description": "Tampilkan detail produk berdasarkan ID."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Product",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                { "key": "name", "value": "Product Updated", "type": "text" },
+                                { "key": "description", "value": "Deskripsi update", "type": "text" },
+                                { "key": "price", "value": "20000", "type": "text" },
+                                { "key": "category_product_id", "value": "1", "type": "text" },
+                                { "key": "shop_id", "value": "1", "type": "text" }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/products/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "products", "1"]
+                        },
+                        "description": "Update data produk. Semua field optional kecuali yang dikirim."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Product",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/products/1",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "products", "1"]
+                        },
+                        "description": "Hapus produk."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Shop Staff Management",
+            "description": "Manajemen staff toko (wajib login).",
+            "item": [
+                {
+                    "name": "List Shop Staff",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1/staff",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "shops", "1", "staff"]
+                        },
+                        "description": "Tampilkan semua staff pada toko tertentu."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Add Shop Staff",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                { "key": "user_id", "value": "2", "type": "text" },
+                                { "key": "role", "value": "staff", "type": "text" }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1/staff",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "shops", "1", "staff"]
+                        },
+                        "description": "Tambah staff ke toko. Role: owner/staff."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Shop Staff",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            { "key": "Accept", "value": "application/json" }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1/staff/2",
+                            "host": ["{{baseUrl}}"],
+                            "path": ["api", "shops", "1", "staff", "2"]
+                        },
+                        "description": "Hapus staff dari toko."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Category Products",
+            "description": "CRUD kategori produk.",
+            "item": [
+                {
+                    "name": "List Category Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/category-products",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "category-products"
+                            ]
+                        },
+                        "description": "Tampilkan semua kategori produk."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"name\": \"Electronics\",\n      \"slug\": \"electronics\",\n      \"description\": \"Gadget and devices\",\n      \"status\": 1,\n      \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Category Product",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "Electronics",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Gadget and devices",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/category-products",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "category-products"
+                            ]
+                        },
+                        "description": "Buat kategori produk baru. Status: 0=inactive, 1=active, 2=pending."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 201,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Electronics\",\n    \"slug\": \"electronics\",\n    \"description\": \"Gadget and devices\",\n    \"status\": 1,\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Category Product",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/category-products/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "category-products",
+                                "1"
+                            ]
+                        },
+                        "description": "Tampilkan detail kategori produk beserta list produk di dalamnya."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Electronics\",\n    \"slug\": \"electronics\",\n    \"description\": \"Gadget and devices\",\n    \"status\": 1,\n    \"products\": [],\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Category Product",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "name",
+                                    "value": "Electronics Updated",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Updated description",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/category-products/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "category-products",
+                                "1"
+                            ]
+                        },
+                        "description": "Update data kategori produk."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"Electronics Updated\",\n    \"slug\": \"electronics-updated\",\n    \"description\": \"Updated description\",\n    \"status\": 1,\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Category Product",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/category-products/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "category-products",
+                                "1"
+                            ]
+                        },
+                        "description": "Hapus kategori produk."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Category product deleted successfully\"\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shops",
+            "description": "CRUD toko. Upload logo menggunakan form-data file. Status: 0=inactive, 1=active, 2=pending.",
+            "item": [
+                {
+                    "name": "List Shops",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "shops"
+                            ]
+                        },
+                        "description": "Tampilkan semua toko."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": [\n    {\n      \"id\": 1,\n      \"logo\": \"logos/example.jpg\",\n      \"name\": \"My Shop\",\n      \"slug\": \"my-shop\",\n      \"address\": \"Jl. Example No. 1\",\n      \"phone_number\": \"08123456789\",\n      \"email\": \"shop@example.com\",\n      \"description\": \"Best shop in town\",\n      \"status\": 1,\n      \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Shop",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "logo",
+                                    "type": "file",
+                                    "src": "/path/to/logo.png"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "My Shop",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "Jl. Example No. 1",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "phone_number",
+                                    "value": "08123456789",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "shop@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Best shop in town",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "shops"
+                            ]
+                        },
+                        "description": "Buat toko baru. Logo optional (jpeg, png, jpg, gif, svg max 2MB). Otomatis menambahkan owner dari user yang login."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 201,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"logo\": \"logos/example.jpg\",\n    \"name\": \"My Shop\",\n    \"slug\": \"my-shop\",\n    \"address\": \"Jl. Example No. 1\",\n    \"phone_number\": \"08123456789\",\n    \"email\": \"shop@example.com\",\n    \"description\": \"Best shop in town\",\n    \"status\": 1,\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
+                        },
+                        {
+                            "name": "Validation Error",
+                            "code": 422,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"The name field is required.\",\n  \"errors\": {\n    \"name\": [\"The name field is required.\"]\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Shop",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "shops",
+                                "1"
+                            ]
+                        },
+                        "description": "Tampilkan detail toko beserta list produk di dalamnya."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"logo\": \"logos/example.jpg\",\n    \"name\": \"My Shop\",\n    \"slug\": \"my-shop\",\n    \"address\": \"Jl. Example No. 1\",\n    \"phone_number\": \"08123456789\",\n    \"email\": \", \"description\": \"Best shop in town\",\n    \"status\": 1,\n    \"products\": [],\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Shop",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "logo",
+                                    "type": "file",
+                                    "src": "/path/to/new-logo.png"
+                                },
+                                {
+                                    "key": "name",
+                                    "value": "My Shop Updated",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "address",
+                                    "value": "Jl. Updated No. 2",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "phone_number",
+                                    "value": "08987654321",
+                                    "type": "tjohn.ext"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "john.updated@example.com",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "description",
+                                    "value": "Updated description",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "shops",
+                                "1"
+                            ]
+                        },
+                        "description": "Update data toko. Semua field optional kecuali yang dikirim."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"data\": {\n    \"id\": 1,\n    \"logo\": \"logos/new-logo.png\",\n    \"name\": \"My Shop Updated\",\n    \"slug\": \"my-shop-updated\",\n    \"address\": \"Jl. Updated No. 2\",\n    \"phone_number\": \"08987654321\",\n    \"email\": \",\"description\": \"Updated description\",\n    \"status\": 1,\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
+                            "file": {
+                                "src": "/path/to/new-logo.png",
+                                "type": "image/png"
+                            }
+                        },
+                        {
+                            "name": "Validation Error",
+                            "code": 422,
+                            "body": "{\n  \"success\": false,\n  \"message\": \"The name field is required.\",\n  \"errors\": {\n    \"name\": [\"The name field is required.\"]\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Shop",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/shops/1",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "shops",
+                                "1"
+                            ]
+                        },
+                        "description": "Hapus toko beserta semua produk dan relasi lainnya."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "code": 200,
+                            "body": "{\n  \"success\": true,\n  \"message\": \"Shop deleted successfully\"\n}"
                         }
                     ]
                 }
             ]
         }
-    ],
-    "auth": {
-        "type": "noauth"
-    }
+    ]
 }

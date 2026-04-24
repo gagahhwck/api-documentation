@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,5 +28,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function scopeFilter()
+    {
+        if (request()->filled('q')) {
+            $query = request()->input('q');
+            return $this->where('name', 'like', "%{$query}%")
+                ->orWhere('email', 'like', "%{$query}%");
+        }
     }
 }
