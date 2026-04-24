@@ -23,7 +23,7 @@
     },
     "item": [
         {
-            "name": "Endpoints",
+            "name": "Authentication API",
             "description": "",
             "item": [
                 {
@@ -192,6 +192,50 @@
                             "header": [],
                             "code": 200,
                             "body": "{\n  \"message\": \"User profile retrieved successfully\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"created_at\": \"2024-01-15T10:00:00.000000Z\",\n    \"updated_at\": \"2024-01-15T10:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout a user",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Invalidate the current access token and log the user out.\nRequires Bearer token from login\/register.",
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{auth_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"User logged out successfully\"\n}",
                             "name": ""
                         },
                         {
